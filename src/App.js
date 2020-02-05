@@ -2,12 +2,14 @@ import React, {useState} from 'react';
 import './App.css';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-
-
+import LinearProgress from '@material-ui/core/LinearProgress';
+import { Search } from '@material-ui/icons';
 
 function App() {
   const [text, setText] = useState('')
   const [memes, setMemes] = useState([]) //it's an array inside of json file
+  const [loading, setLoading] = useState(false)
+
 
   async function getMemes() {
     const key = 'eQVdZZXH4xLAaJV3AEF3oiS4YF0NuyB1'
@@ -18,6 +20,7 @@ function App() {
     const body = await r.json()
     setMemes(body.data)
     setText('') //after using it, set text equals to empty
+    setLoading (false)
   }
 
   console.log(memes)
@@ -35,24 +38,25 @@ function App() {
           }}
           />
           <Button variant="contained" color="primary"
-          onClick={getMemes}> 
-          Primary
+            onClick={getMemes}>
+            <Search />
+            Search
           </Button>
         </div>
+        </header>
+        
+        {loading && <LinearProgress />}
 
         <div className='memes'>
         {memes.map((meme,i)=> <Meme key={i} {...meme} />)}
-
         </div>
- 
-      </header>
     </div>
   );
 }
 
-function Meme({title, images}) {
+function Meme({images, title}){
   return <div className="meme">
-    <img src={images.fixed_height.url} alt={"meme title"}/>
+    <img src={images.fixed_height.url} alt="meme" />
     <div className="meme-title">{title}</div>
   </div>
 }
